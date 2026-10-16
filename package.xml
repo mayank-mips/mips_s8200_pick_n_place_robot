@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mips_pick_n_place</name>
+  <version>0.1.0</version>
+  <description>
+    AI-driven pick-and-place demo for a Fanuc LR-Mate 200iD-7L arm in Gazebo:
+    depth-camera sensing, object detection, inverse kinematics motion, and a
+    vacuum/attach grasp plugin. Built on top of
+    intelligent-control-lab/Robot_Digital_Twin (MIT).
+  </description>
+
+  <maintainer email="you@example.com">mayank-mips</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- core -->
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+
+  <!-- perception -->
+  <depend>cv_bridge</depend>
+  <depend>image_transport</depend>
+  <depend>pcl_ros</depend>
+
+  <!-- simulation / control -->
+  <depend>gazebo_ros</depend>
+  <depend>gazebo_plugins</depend>
+  <depend>gazebo_ros_control</depend>
+  <depend>controller_manager</depend>
+  <depend>joint_state_controller</depend>
+  <depend>position_controllers</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>xacro</depend>
+
+  <!-- motion / IK (MoveIt). Remove if using the KDL fallback only. -->
+  <exec_depend>moveit_ros_planning_interface</exec_depend>
+  <exec_depend>moveit_commander</exec_depend>
+
+  <export>
+    <gazebo_ros gazebo_model_path="${prefix}/models"/>
+  </export>
+</package>
