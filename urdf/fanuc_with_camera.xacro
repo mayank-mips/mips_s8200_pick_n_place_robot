@@ -2,27 +2,30 @@
 <robot name="fanuc_pick_place" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- ============================================================= -->
-  <!-- Top-level model: Fanuc arm (from robot_digital_twin) + depth   -->
-  <!-- camera + suction tip. The base arm xacro is expected to be     -->
-  <!-- available as package 'robot_digital_twin' in the same catkin   -->
-  <!-- workspace (see README for cloning instructions).               -->
+  <!-- Top-level model: Fanuc arm (from robot_digital_twin) + fixed   -->
+  <!-- overhead depth camera + suction tip.                           -->
+  <!--                                                                -->
+  <!-- IMPORTANT: robot_digital_twin/urdf/fanuc_arm.xacro already     -->
+  <!-- INSTANTIATES the arm (it calls <xacro:fanuc_lrmate200id7l/> at -->
+  <!-- the bottom of the file) AND registers its own                  -->
+  <!-- gazebo_ros_control plugin + a wrist camera. So we only INCLUDE -->
+  <!-- it once here (that single include spawns the whole arm) and    -->
+  <!-- then add our extra links. We must NOT wrap it in another macro -->
+  <!-- or include it twice (that was causing two arms).               -->
   <!-- ============================================================= -->
 
-  <!-- Pull in the Fanuc arm definition from the base repo. -->
   <xacro:include filename="$(find robot_digital_twin)/urdf/fanuc_arm.xacro"/>
-
-  <!-- Our additions -->
   <xacro:include filename="$(find mips_pick_n_place)/urdf/depth_camera.xacro"/>
   <xacro:include filename="$(find mips_pick_n_place)/urdf/suction_tip.xacro"/>
 
-  <!-- NOTE: adjust 'base_link' and 'link_6' to match the actual link -->
-  <!-- names in robot_digital_twin's fanuc_arm.xacro if they differ. -->
+  <!-- Fixed overhead (eye-to-hand) depth camera on a stand ~1.3 m     -->
+  <!-- above the table, looking straight DOWN at the workspace.        -->
+  <!-- Parent to 'world' (the base model's root link) so it stays put. -->
+  <!-- rpy pitches the camera to point its +x (optical forward) down.  -->
+  <xacro:depth_camera parent="world" xyz="0.45 0.0 1.3" rpy="0 1.5708 0"/>
 
-  <!-- Mount the depth camera on a fixed stand ~1.2 m above the table, -->
-  <!-- looking straight down at the workspace (eye-to-hand). -->
-  <xacro:depth_camera parent="base_link" xyz="0.4 0.0 1.2" rpy="0 1.5708 0"/>
-
-  <!-- Attach the suction tip to the arm flange. -->
+  <!-- Suction tip attached to the arm flange (link_6 is the real last -->
+  <!-- link in fanuc_arm.xacro). -->
   <xacro:suction_tip parent="link_6"/>
 
 </robot>

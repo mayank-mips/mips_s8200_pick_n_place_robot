@@ -1,12 +1,14 @@
 <launch>
-  <!-- Brings up Gazebo world, the Fanuc arm + depth camera + suction tip, -->
-  <!-- and the joint controllers. -->
+  <!-- Brings up Gazebo with OUR world, spawns the Fanuc arm + overhead  -->
+  <!-- depth camera + suction tip ONCE, and starts the joint controllers. -->
 
   <arg name="paused" default="false"/>
   <arg name="gui" default="true"/>
   <arg name="namespace" default="/fanuc_gazebo"/>
 
-  <!-- Gazebo with our world -->
+  <!-- 1. Gazebo with our custom world (table + red box + drop marker). -->
+  <!--    We load the world HERE and do NOT let the base fanuc.launch    -->
+  <!--    start its own empty_world (that was overriding our world).     -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find mips_pick_n_place)/worlds/pick_place.world"/>
     <arg name="paused" value="$(arg paused)"/>
@@ -14,17 +16,18 @@
     <arg name="use_sim_time" value="true"/>
   </include>
 
-  <!-- Robot description: Fanuc arm + camera + suction tip -->
+  <!-- 2. Robot description = Fanuc arm + overhead camera + suction tip. -->
   <param name="robot_description"
          command="$(find xacro)/xacro --inorder $(find mips_pick_n_place)/urdf/fanuc_with_camera.xacro"/>
 
-  <group ns="$(arg namespace)">
-    <!-- spawn the model -->
-    <node name="spawn_model" pkg="gazebo_ros" type="spawn_model"
-          args="-param /robot_description -urdf -model fanuc_pick_place"
-          respawn="false" output="screen"/>
+  <!-- 3. Spawn the model exactly ONCE. -->
+  <node name="spawn_model" pkg="gazebo_ros" type="spawn_model"
+        args="-param robot_description -urdf -model fanuc_pick_place"
+        respawn="false" output="screen"/>
 
-    <!-- controllers -->
+  <!-- 4. Controllers (loaded under the namespace used by the base model's -->
+  <!--    gazebo_ros_control plugin, which has legacyModeNS=true). -->
+  <group ns="$(arg namespace)">
     <rosparam file="$(find mips_pick_n_place)/config/robot_control_6dof.yaml" command="load"/>
     <node name="controller_spawner" pkg="controller_manager" type="spawner"
           respawn="false" output="screen"
