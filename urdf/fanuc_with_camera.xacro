@@ -12,11 +12,20 @@
   <!-- it once here (that single include spawns the whole arm) and    -->
   <!-- then add our extra links. We must NOT wrap it in another macro -->
   <!-- or include it twice (that was causing two arms).               -->
+  <!--                                                                -->
+  <!-- OPTION B (controller namespace): the base file's own            -->
+  <!-- gazebo_ros_control plugin must be DISABLED (comment out the     -->
+  <!-- <gazebo><plugin ...gazebo_ros_control...> block near the bottom -->
+  <!-- of robot_digital_twin/urdf/fanuc_arm.xacro). Our               -->
+  <!-- pick_place_gazebo.xacro below re-adds that plugin pinned to the -->
+  <!-- /fanuc_gazebo namespace so the controller_manager and all       -->
+  <!-- /fanuc_gazebo/jointN_* topics line up. See README.             -->
   <!-- ============================================================= -->
 
   <xacro:include filename="$(find robot_digital_twin)/urdf/fanuc_arm.xacro"/>
   <xacro:include filename="$(find mips_pick_n_place)/urdf/depth_camera.xacro"/>
   <xacro:include filename="$(find mips_pick_n_place)/urdf/suction_tip.xacro"/>
+  <xacro:include filename="$(find mips_pick_n_place)/urdf/pick_place_gazebo.xacro"/>
 
   <!-- Fixed overhead (eye-to-hand) depth camera on a stand ~1.3 m     -->
   <!-- above the table, looking straight DOWN at the workspace.        -->
