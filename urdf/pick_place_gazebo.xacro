@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ================================================================= -->
+  <!-- Our gazebo_ros_control override (Option B).                        -->
+  <!--                                                                    -->
+  <!-- The base robot_digital_twin/urdf/fanuc_arm.xacro registers its own -->
+  <!-- gazebo_ros_control plugin with robotNamespace COMMENTED OUT and    -->
+  <!-- legacyModeNS=true, which puts the controller_manager in the ROOT   -->
+  <!-- namespace. That broke our /fanuc_gazebo controller spawning.       -->
+  <!--                                                                    -->
+  <!-- This block forces the hardware interface + controller_manager to   -->
+  <!-- live under /fanuc_gazebo so all our /fanuc_gazebo/jointN_* topics  -->
+  <!-- and the controller YAML line up.                                   -->
+  <!--                                                                    -->
+  <!-- IMPORTANT: Gazebo loads EVERY <plugin> it finds. You MUST disable  -->
+  <!-- the base plugin or you'll get two controller_managers fighting.    -->
+  <!-- See README "Option B / controller namespace" for the one-line      -->
+  <!-- comment-out in fanuc_arm.xacro.                                    -->
+  <!-- ================================================================= -->
+
+  <gazebo>
+    <plugin name="gazebo_ros_control_ns" filename="libgazebo_ros_control.so">
+      <robotNamespace>/fanuc_gazebo</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      <legacyModeNS>false</legacyModeNS>
+    </plugin>
+  </gazebo>
+
+</robot>
