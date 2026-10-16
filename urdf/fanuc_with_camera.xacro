@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<robot name="fanuc_pick_place" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ============================================================= -->
+  <!-- Top-level model: Fanuc arm (from robot_digital_twin) + depth   -->
+  <!-- camera + suction tip. The base arm xacro is expected to be     -->
+  <!-- available as package 'robot_digital_twin' in the same catkin   -->
+  <!-- workspace (see README for cloning instructions).               -->
+  <!-- ============================================================= -->
+
+  <!-- Pull in the Fanuc arm definition from the base repo. -->
+  <xacro:include filename="$(find robot_digital_twin)/urdf/fanuc_arm.xacro"/>
+
+  <!-- Our additions -->
+  <xacro:include filename="$(find mips_pick_n_place)/urdf/depth_camera.xacro"/>
+  <xacro:include filename="$(find mips_pick_n_place)/urdf/suction_tip.xacro"/>
+
+  <!-- NOTE: adjust 'base_link' and 'link_6' to match the actual link -->
+  <!-- names in robot_digital_twin's fanuc_arm.xacro if they differ. -->
+
+  <!-- Mount the depth camera on a fixed stand ~1.2 m above the table, -->
+  <!-- looking straight down at the workspace (eye-to-hand). -->
+  <xacro:depth_camera parent="base_link" xyz="0.4 0.0 1.2" rpy="0 1.5708 0"/>
+
+  <!-- Attach the suction tip to the arm flange. -->
+  <xacro:suction_tip parent="link_6"/>
+
+</robot>

@@ -1,0 +1,29 @@
+# Configurable parameters for the pick-and-place FSM.
+# All poses are in the robot base frame (meters / radians).
+
+pick_and_place:
+  base_frame: "base_link"
+  object_topic: "/detected_object_pose"
+
+  # Vertical offset above a target before descending (pre-grasp / pre-place)
+  approach_height: 0.15
+
+  # How far down to descend from the approach pose to make contact
+  grasp_depth: 0.12
+
+  # Fixed drop-off location (where the object is released)
+  drop_pose:
+    x: 0.0
+    y: -0.45
+    z: 0.10
+
+  # End-effector downward orientation (quaternion, pointing tool -Z at table)
+  tool_orientation:
+    x: 1.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
+
+  # Timings (seconds)
+  settle_time: 1.0
+  grasp_time: 0.8

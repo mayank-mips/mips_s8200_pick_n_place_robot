@@ -1,0 +1,6 @@
+<launch>
+  <!-- Object detection pipeline (depth camera -> detected object pose). -->
+  <rosparam file="$(find mips_pick_n_place)/config/color_detector.yaml" command="load"/>
+  <node name="object_detector" pkg="mips_pick_n_place"
+        type="object_detector.py" output="screen"/>
+</launch>

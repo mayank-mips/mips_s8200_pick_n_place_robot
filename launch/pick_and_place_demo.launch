@@ -1,0 +1,17 @@
+<launch>
+  <!-- Top-level demo: Gazebo + arm + camera + controllers + perception + -->
+  <!-- motion + pick-and-place FSM. -->
+  <arg name="use_moveit" default="true"/>
+
+  <include file="$(find mips_pick_n_place)/launch/bringup.launch"/>
+
+  <!-- give Gazebo/controllers a moment before starting the pipeline -->
+  <include file="$(find mips_pick_n_place)/launch/perception.launch"/>
+  <include file="$(find mips_pick_n_place)/launch/motion.launch">
+    <arg name="use_moveit" value="$(arg use_moveit)"/>
+  </include>
+
+  <rosparam file="$(find mips_pick_n_place)/config/pick_and_place.yaml" command="load"/>
+  <node name="pick_and_place_fsm" pkg="mips_pick_n_place"
+        type="pick_and_place_fsm.py" output="screen" launch-prefix="bash -c 'sleep 8; $0 $@'"/>
+</launch>

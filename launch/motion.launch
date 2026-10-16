@@ -1,0 +1,16 @@
+<launch>
+  <!-- IK / motion backend + vacuum gripper service. -->
+  <arg name="use_moveit" default="true"/>
+
+  <node name="motion_ik" pkg="mips_pick_n_place" type="motion_ik.py"
+        output="screen">
+    <param name="use_moveit" value="$(arg use_moveit)"/>
+    <param name="namespace" value="/fanuc_gazebo"/>
+    <param name="base_frame" value="base_link"/>
+    <param name="eef_link" value="suction_tip"/>
+    <param name="move_group" value="manipulator"/>
+  </node>
+
+  <node name="vacuum_gripper" pkg="mips_pick_n_place"
+        type="vacuum_gripper.py" output="screen"/>
+</launch>
